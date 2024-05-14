@@ -2,14 +2,14 @@ package guru.springframeworkneeraj.sfgdi.config;
 
 import com.springframework.pets.PetService;
 import com.springframework.pets.PetServiceFactory;
+import guru.springframeworkneeraj.sfgdi.datasource.FakeDataSource;
 import guru.springframeworkneeraj.sfgdi.repositories.EnglishGreetingRepository;
 import guru.springframeworkneeraj.sfgdi.repositories.EnglishGreetingRepositoryImpl;
 import guru.springframeworkneeraj.sfgdi.services.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.*;
 
+@PropertySource("classpath:datasource.properties")
 @Configuration
 public class GreetingServiceConfig {
 
@@ -65,5 +65,14 @@ public class GreetingServiceConfig {
     @Profile({"cat","default"})
     PetService catPetService(PetServiceFactory petServiceFactory){
         return petServiceFactory.getPetService("cat");
+    }
+
+    @Bean
+    FakeDataSource fakeDataSource(@Value("${guruneeraj.username}") String username, @Value("${guruneeraj.password}") String password, @Value("${guruneeraj.jdbcurl}") String jdbcurl){
+        FakeDataSource fakeDataSource = new FakeDataSource();
+        fakeDataSource.setUsername(username);
+        fakeDataSource.setPassword(password);
+        fakeDataSource.setJdbcurl(jdbcurl);
+        return fakeDataSource;
     }
 }
